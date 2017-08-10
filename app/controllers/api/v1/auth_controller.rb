@@ -4,7 +4,10 @@ class Api::V1::AuthController < ApplicationController
   def show
     render json: {
       id: current_user.id,
-      email: current_user.email
+      email: current_user.email,
+      lat: current_user.lat,
+      long: current_user.long,
+      address: current_user.address
     }
   end
 
