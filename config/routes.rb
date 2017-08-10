@@ -3,15 +3,16 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       post '/login', to: 'auth#create'
-      post '/signup', to: 'users#create'
       get '/me', to: 'auth#show'
+
+      post '/signup', to: 'users#create'
 
       resources :item_variations
       resources :menu_items
       resources :user_places
       resources :places
       resources :users
-      
+
     end
   end
 end
