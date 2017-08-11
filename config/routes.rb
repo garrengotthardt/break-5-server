@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
       post '/signup', to: 'users#create'
 
+      post '/create_nested', to: 'create_nested#create'
+
       resources :item_variations
       resources :menu_items
       resources :user_places

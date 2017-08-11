@@ -12,7 +12,6 @@ module Api
         if docText.include? "places.singleplatform.com"
           index = docText.index("http://places.singleplatform.com/")
           menuURL = docText[index, 200].split("%3")[0]
-
           grabMenuItems(menuURL)
 
         end
