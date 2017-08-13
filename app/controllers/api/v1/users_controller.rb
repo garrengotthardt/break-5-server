@@ -23,6 +23,9 @@ module Api
         @user = User.find(params[:id])
 
         if @user.update(lat: params[:lat], long: params[:long], address: params[:address])
+          
+          ## SEND REQUEST TO MENU ITEM FINDER
+
           render json: {user: @user, message: "User was updated!", status: 201}
         else
           render json: @user.errors, message: "Could not update User!", status: 401

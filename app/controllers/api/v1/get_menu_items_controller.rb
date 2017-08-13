@@ -2,7 +2,6 @@ module Api
   module V1
     class GetMenuItemsController < ApplicationController
 
-
       def grabMenuLink(googlePlacesURL)
         require 'openssl'
          doc = Nokogiri::HTML(open( googlePlacesURL , :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE))
@@ -13,11 +12,8 @@ module Api
           index = docText.index("http://places.singleplatform.com/")
           menuURL = docText[index, 200].split("%3")[0]
           grabMenuItems(menuURL)
-
         end
       end
-
-
 
 
       def grabMenuItems(menuURL)

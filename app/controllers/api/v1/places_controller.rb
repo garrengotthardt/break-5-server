@@ -7,7 +7,7 @@ module Api
       end
 
       def show
-        render json: Place.find(params[:id])
+        render json: Place.find(params[:id]), include: ['menu_items','menu_items.item_variations']
 
         # full_place_data = Place.get_full_place_data(params[:id])
         # byebug
