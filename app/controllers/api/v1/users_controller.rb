@@ -22,8 +22,7 @@ module Api
 
       def update
         @user = User.find(params[:id])
-
-        if @user.update(lat: params[:lat], long: params[:long], address: params[:address])
+        if @user.update(user_params)
 
           ## SEND REQUEST TO MENU ITEM FINDER
 
