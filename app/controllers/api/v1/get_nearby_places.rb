@@ -7,11 +7,23 @@ module Api
         resultsArray = @client.spots(lat, long, :types => ['restaurant','food'])
         resultsGoogleIDArray = resultsArray.map { |result| result.place_id  }
         fullPlaceDataArray = resultsGoogleIDArray.map { |place_id| @client.spot(place_id)}
-        arrayOfURLs = fullPlaceDataArray.map { |place| place.url }
-        arrayOfURLs.each do |url|
-          grabMenuLink(url)
+        fullPlaceDataArray.each do |place|
+          puts "LOCATION INFO:"
+          puts place.name
+          puts place.place_id
+          puts place.formatted_address
+          puts place.lat
+          puts place.lng
+          grabMenuLink(place.url)
+          puts
+          puts
+          puts
+          puts
+          puts
         end
       end
+
+
 
     end
   end

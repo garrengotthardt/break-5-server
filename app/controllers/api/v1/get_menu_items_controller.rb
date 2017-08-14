@@ -22,13 +22,26 @@ module Api
 
          doc.css('.item').each do |item|
            newItem = []
-           title = item.search('.title').text
-           price = item.search('.price').text
-           description = item.search('.description').text
+           title = item.css('.title-row').css('.title').text.strip
+           description = item.search('.description').text.strip
            newItem.push(title)
-           newItem.push(price)
            newItem.push(description)
+
+           itemVariations = []
+           itemPrice = item.css('.title-row').css('.price').text.strip
+           itemMultiPrice = item.css('.multiprice').css('li').text.strip.squish
+           itemVariations.push(itemPrice)
+           itemVariations.push(itemMultiPrice)
+
+
+           puts "ITEM:"
            puts newItem
+           puts "ITEM VARIATIONS:"
+           puts itemVariations
+           puts
+           puts
+           puts
+           puts
          end
       end
 

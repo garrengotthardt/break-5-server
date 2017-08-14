@@ -4,14 +4,13 @@ module Api
     class CreateNestedController < ApplicationController
 
       def create
-        byebug
         @place = Place.find_or_create_by(google_places_id: params[:google_places_id])
         @place.update_attributes(place_params)
 
         @menu_item = MenuItem.new(name: params[:newMenuItem][:name], place_id: @place.id)
         #add check if valid
         @menu_item.save
-        
+
         @item_variation = ItemVariation.new(variation: params[:newMenuItemVariations][:variation], price: params[:newMenuItemVariations][:price].to_i, menu_item_id: @menu_item.id  )
         #add check if valid
         @item_variation.save
