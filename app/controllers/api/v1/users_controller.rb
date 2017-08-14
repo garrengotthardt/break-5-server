@@ -13,10 +13,14 @@ module Api
 
       def create
         @user = User.new(user_params)
-        byebug
-        if @user.valid?
-          @user.save
-          render json: {user: @user, message: "User was created!", status: 201}
+
+        if @user.save
+          created_jwt = issue_token(id: @user.id)
+          render json: { email: @user.email, jwt: created_jwt }
+        else
+          render json: {
+            error: 'Email already exists'
+          }, status: 422
         end
       end
 
