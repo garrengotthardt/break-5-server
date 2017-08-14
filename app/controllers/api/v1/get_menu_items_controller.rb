@@ -45,7 +45,6 @@ module Api
          end
       end
 
-      grabMenuLink("https://maps.google.com/?cid=9087676600257989663")
     end
   end
 end
