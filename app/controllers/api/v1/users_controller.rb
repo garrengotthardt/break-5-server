@@ -13,6 +13,7 @@ module Api
 
       def create
         @user = User.new(user_params)
+        byebug
         if @user.valid?
           @user.save
           render json: {user: @user, message: "User was created!", status: 201}
@@ -23,7 +24,7 @@ module Api
         @user = User.find(params[:id])
 
         if @user.update(lat: params[:lat], long: params[:long], address: params[:address])
-          
+
           ## SEND REQUEST TO MENU ITEM FINDER
 
           render json: {user: @user, message: "User was updated!", status: 201}
@@ -35,7 +36,7 @@ module Api
       private
 
       def user_params
-        params.permit(:first_name, :last_name, :email, :password, :password_confirmation, :address, :lat, :long)
+        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :address, :lat, :long)
       end
     end
 
