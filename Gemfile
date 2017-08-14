@@ -43,3 +43,5 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'nokogiri'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'google_places'
+
+ruby '2.4.1'
