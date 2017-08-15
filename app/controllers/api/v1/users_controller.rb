@@ -16,7 +16,7 @@ module Api
 
         if @user.save
           created_jwt = issue_token(id: @user.id)
-          render json: { email: @user.email, jwt: created_jwt }
+          render json: { email: @user.email, id: @user.id, jwt: created_jwt }
         else
           render json: {
             error: 'Email already exists'
