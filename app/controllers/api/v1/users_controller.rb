@@ -2,7 +2,6 @@ module Api
   module V1
 
     class UsersController < ApplicationController
-      require 'get_nearby_places'
 
       def index
         render json: User.all
@@ -33,7 +32,7 @@ module Api
 
         if @user.update(user_params)
 
-          if oldLat != @user.lat || oldLong != @user.long  
+          if oldLat != @user.lat || oldLong != @user.long
             getNearbyPlaces(user_params[:lat], user_params[:long])
           end
 

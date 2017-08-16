@@ -16,6 +16,11 @@ module Api
         render json: {message: "Created MenuItem!", menu_item: menu_item, status: 201}
       end
 
+      def destroy
+        menuItem = MenuItem.find(params[:id])
+        menuItem.destroy
+      end
+
       private
 
       def menu_item_params

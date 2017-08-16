@@ -58,22 +58,15 @@ class ApplicationController < ActionController::API
       @place.name = place.name
       @place.address = place.formatted_address
       @place.lat = place.lat
-      @place.long = place.long
+      @place.long = place.lng
       @place.url = place.url
+      @place.save
 
       grabMenuLink(@place.url, @place.id)
-      # puts "LOCATION INFO:"
-      # puts place.name
-      # puts place.place_id
-      # puts place.formatted_address
-      # puts place.lat
-      # puts place.lng
-      # grabMenuLink(place.url)
-      # puts
-      # puts
-      # puts
-      # puts
-      # puts
+
+      if @place.menu_items.length == 0
+        @place.destroy
+      end
     end
   end
 
@@ -101,45 +94,40 @@ class ApplicationController < ActionController::API
 
        section.css('.item').each do |item|
         #  newItem = []
-         title = item.css('.title-row').css('.title').text.strip
+         name = item.css('.title-row').css('.title').text.strip
          description = item.search('.description').text.strip
-
          ## FIND OR CREATE ITEM BY NAME
-         @menuItem = MenuItem.find_or_create_by_name_and_place_id(:name => title, :place_id => placeID)
+         @menuItem = MenuItem.find_or_create_by(name: name, place_id: placeID)
          @menuItem.description = description
          @menuItem.category = sectionName
-        #  newItem.push(title)
-        #  newItem.push(description)
-
-
-
+         @menuItem.save
 
          ## IF ITEM HAS SINGLE PRICE
-        #  itemVariations = []
-         itemPrice = item.css('.title-row').css('.price').text.strip.slice(1..-1)
+        if item.css('.title-row').css('.price').length != 0
+           itemPrice = item.css('.title-row').css('.price').text.strip.slice(1..-1).to_f
 
-        #  itemVariations.push(itemPrice)
+           if itemPrice <= 5
+             @itemVar = ItemVariation.find_or_create_by(variation:'', menu_item_id: @menuItem.id)
+             @itemVar.price = itemPrice
+             @itemVar.save
+           end
 
-         item.css('.multiprice').css('li').each do |variation|
-           itemVar = variation.css('.title').text.strip
-           itemVarPrice = variation.css('.price').text.strip.slice(1..-1)
-           itemVariations.push(itemVar)
-           itemVariations.push(itemVarPrice)
-         end
+         ## IF ITEM HAS MULTIPLE PRICES
+        elsif item.css('.multiprice').css('li').length != 0
+           item.css('.multiprice').css('li').each do |variation|
+             itemVar = variation.css('.title').text.strip
+             itemVarPrice = variation.css('.price').text.strip.slice(1..-1).to_f
+             if itemVarPrice <= 5
+               @itemVar = ItemVariation.find_or_create_by(variation: itemVar, menu_item_id: @menuItem.id)
+               @itemVar.price = itemVarPrice
+               @itemVar.save
+             end
+           end
+        end
 
-
-
-
-        #  puts "ITEM:"
-        #  puts newItem
-        #  puts "CATEGORY:"
-        #  puts sectionName
-        #  puts "ITEM VARIATIONS:"
-        #  puts itemVariations
-        #  puts
-        #  puts
-        #  puts
-        #  puts
+        if @menuItem.item_variations.length == 0
+          @menuItem.destroy
+        end
        end
      end
   end

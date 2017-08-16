@@ -15,6 +15,11 @@ module Api
         render json: {message: "Created Place!", place: place, status: 201}
       end
 
+      def destroy
+        place = Place.find(params[:id])
+        place.destroy
+      end
+
       private
 
       def place_params
