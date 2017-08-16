@@ -16,10 +16,15 @@ module Api
         render json: {message: "Created MenuItem!", menu_item: menu_item, status: 201}
       end
 
+      def destroy
+        menuItem = MenuItem.find(params[:id])
+        menuItem.destroy
+      end
+
       private
 
       def menu_item_params
-        params.permit(:name, :place_id)
+        params.permit(:name, :description, :place_id)
       end
     end
 
