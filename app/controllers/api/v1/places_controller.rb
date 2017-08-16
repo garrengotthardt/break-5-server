@@ -8,10 +8,6 @@ module Api
 
       def show
         render json: Place.find(params[:id]), include: ['menu_items','menu_items.item_variations']
-
-        # full_place_data = Place.get_full_place_data(params[:id])
-        # byebug
-        # render json: full_place_data
       end
 
       def create
@@ -22,7 +18,7 @@ module Api
       private
 
       def place_params
-        params.permit(:name, :address, :lat, :long, :google_places_id)
+        params.permit(:name, :address, :lat, :long, :google_places_id, :url)
       end
     end
 

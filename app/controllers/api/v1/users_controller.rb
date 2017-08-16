@@ -2,6 +2,8 @@ module Api
   module V1
 
     class UsersController < ApplicationController
+      require 'get_nearby_places'
+
       def index
         render json: User.all
       end
@@ -26,20 +28,27 @@ module Api
 
       def update
         @user = User.find(params[:id])
+        oldLat = @user.lat
+        oldLong = @user.long
+
         if @user.update(user_params)
 
-          ## SEND REQUEST TO MENU ITEM FINDER
+          if oldLat != @user.lat || oldLong != @user.long  
+            getNearbyPlaces(user_params[:lat], user_params[:long])
+          end
 
           render json: {user: @user, message: "User was updated!", status: 201}
+
         else
           render json: @user.errors, message: "Could not update User!", status: 401
+
         end
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :address, :lat, :long)
+        params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :address, :lat, :long)
       end
     end
 
