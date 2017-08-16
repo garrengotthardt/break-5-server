@@ -6,7 +6,7 @@ module Api
       def create
         @place = Place.find_or_create_by(google_places_id: params[:google_places_id])
         @place.update_attributes(place_params)
-
+        
         @menu_item = MenuItem.new(name: params[:newMenuItem][:name], place_id: @place.id)
         #add check if valid
         @menu_item.save
