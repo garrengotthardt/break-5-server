@@ -15,6 +15,19 @@ module Api
         render json: {message: "Created Place!", place: place, status: 201}
       end
 
+      def update
+        @place = Place.find(params[:id])
+
+        if @place.update(place_params)
+
+          render json: {user: @place, message: "Place was updated!", status: 201}
+
+        else
+          render json: @place.errors, message: "Could not update place!", status: 401
+
+        end
+      end
+
       def destroy
         place = Place.find(params[:id])
         place.destroy
