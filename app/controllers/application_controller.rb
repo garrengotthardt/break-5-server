@@ -55,14 +55,14 @@ class ApplicationController < ActionController::API
     fullPlaceDataArray.each do |place|
       ## FIND OR CREATE PLACE
       @place = Place.find_or_create_by(google_places_id: place.place_id)
-      # @place.name = place.name
-      # @place.address = place.formatted_address
-      # @place.lat = place.lat
-      # @place.long = place.lng
-      # @place.url = place.url
+      @place.name = place.name
+      @place.address = place.formatted_address
+      @place.lat = place.lat
+      @place.long = place.lng
+      @place.url = place.url
       @place.save
 
-      grabMenuLink(@place.url, @place.id)
+      # grabMenuLink(@place.url, @place.id)
 
       if @place.menu_items.length == 0
         @place.destroy
