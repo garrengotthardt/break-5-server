@@ -55,7 +55,7 @@ class ApplicationController < ActionController::API
     fullPlaceDataArray.each do |place|
       ## FIND OR CREATE PLACE
       @place = Place.find_or_create_by(google_places_id: place.place_id)
-      @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, url: place.url)
+      @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, google_url: place.url)
 
       grabMenuLink(@place.url, @place.id)
 
@@ -75,6 +75,7 @@ class ApplicationController < ActionController::API
      index = docText.index("//places.s")
       if index != nil
         menuURL = docText[index - 5, 100].split("%3")[0]
+        @place.update(menu_url: menuURL)
         grabMenuItems(menuURL, placeID)
       end
 

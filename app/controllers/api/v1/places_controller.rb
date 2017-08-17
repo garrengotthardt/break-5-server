@@ -35,7 +35,7 @@ module Api
       private
 
       def place_params
-        params.permit(:name, :address, :lat, :long, :google_places_id, :url)
+        params.permit(:name, :address, :lat, :long, :google_places_id, :google_url, :menu_url)
       end
     end
 
