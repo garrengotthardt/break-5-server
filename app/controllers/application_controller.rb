@@ -66,9 +66,9 @@ class ApplicationController < ActionController::API
 
       # grabMenuLink(@place.url, @place.id)
 
-      if @place.menu_items.length == 0
-        @place.destroy
-      end
+      # if @place.menu_items.length == 0
+      #   @place.destroy
+      # end
     end
   end
 
