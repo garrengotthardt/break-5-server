@@ -49,7 +49,7 @@ class ApplicationController < ActionController::API
   ###MenuItemGrabber
   def getNearbyPlaces(lat, long)
     @client = GooglePlaces::Client.new('AIzaSyCjEt1fC6-5TCeW7-AXugFRWkjeGImZfyU')
-    resultsArray = @client.spots(lat, long, :types => ['restaurant','food'])
+    resultsArray = @client.spots(lat, long, :types => ['restaurant', 'cafe', 'bar'], :price_level => [0-2])
     resultsGoogleIDArray = resultsArray.map { |result| result.place_id  }
     fullPlaceDataArray = resultsGoogleIDArray.map { |place_id| @client.spot(place_id)}
     fullPlaceDataArray.each do |place|
@@ -57,7 +57,11 @@ class ApplicationController < ActionController::API
       @place = Place.find_or_create_by(google_places_id: place.place_id)
       @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, google_url: place.url)
 
-      grabMenuLink(@place.url, @place.id)
+      if @place.menu_url != nil
+        grabMenuItems(@place.menu_url, @place.id)
+      else
+        grabMenuLink(@place.google_url, @place.id)
+      end
 
       if @place.menu_items.length == 0
         @place.destroy
