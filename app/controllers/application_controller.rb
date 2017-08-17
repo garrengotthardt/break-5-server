@@ -64,11 +64,11 @@ class ApplicationController < ActionController::API
       # @place.url = place.url
       # @place.save
 
-      # grabMenuLink(@place.url, @place.id)
+      grabMenuLink(@place.url, @place.id)
 
-      # if @place.menu_items.length == 0
-      #   @place.destroy
-      # end
+      if @place.menu_items.length == 0
+        @place.destroy
+      end
     end
   end
 
