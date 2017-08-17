@@ -57,13 +57,6 @@ class ApplicationController < ActionController::API
       @place = Place.find_or_create_by(google_places_id: place.place_id)
       @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, url: place.url)
 
-      # @place.name = place.name
-      # @place.address = place.formatted_address
-      # @place.lat = place.lat
-      # @place.long = place.lng
-      # @place.url = place.url
-      # @place.save
-
       grabMenuLink(@place.url, @place.id)
 
       if @place.menu_items.length == 0
@@ -73,64 +66,70 @@ class ApplicationController < ActionController::API
   end
 
   def grabMenuLink(googlePlacesURL, placeID)
-    require 'openssl'
+    # require 'openssl'
     require 'open-uri'
      doc = Nokogiri::HTML(open( googlePlacesURL , :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)
 
      docText = doc.text
 
-    if docText.include? "places.singleplatform.com"
-      index = docText.index("http://places.singleplatform.com/")
-      menuURL = docText[index, 200].split("%3")[0]
-      grabMenuItems(menuURL, placeID)
-    end
+     index = docText.index("//places.s")
+      if index != nil
+        menuURL = docText[index - 5, 100].split("%3")[0]
+        grabMenuItems(menuURL, placeID)
+      end
+
   end
 
 
   def grabMenuItems(menuURL, placeID)
-    require 'openssl'
-     doc = Nokogiri::HTML(open( menuURL , :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)
+    # require 'openssl'
+    doc = Nokogiri::HTML(open( menuURL , :ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE).read)
+    if doc.css('.price').any? {|price| price.text.strip.slice(1..-1).to_f > 0 && price.text.strip.slice(1..-1).to_f <= 5 }
+      doc.css('.section').each do |section|
+        if section.css('.price').any? {|price| price.text.strip.slice(1..-1).to_f > 0 && price.text.strip.slice(1..-1).to_f <= 5 }
+          sectionName = section.css('.title').css('h3').text.strip
 
-     doc.css('.section').each do |section|
-       sectionName = section.css('.title').css('h3').text.strip
+          section.css('.item').each do |item|
+            if item.css('.price').any? {|price| price.text.strip.slice(1..-1).to_f > 0 && price.text.strip.slice(1..-1).to_f <= 5 }
+              #  newItem = []
+               name = item.css('.title-row').css('.title').text.strip
+               description = item.search('.description').text.strip
+               ## FIND OR CREATE ITEM BY NAME
+               @menuItem = MenuItem.find_or_create_by(name: name, place_id: placeID)
+               @menuItem.description = description
+               @menuItem.category = sectionName
+               @menuItem.save
 
-       section.css('.item').each do |item|
-        #  newItem = []
-         name = item.css('.title-row').css('.title').text.strip
-         description = item.search('.description').text.strip
-         ## FIND OR CREATE ITEM BY NAME
-         @menuItem = MenuItem.find_or_create_by(name: name, place_id: placeID)
-         @menuItem.description = description
-         @menuItem.category = sectionName
-         @menuItem.save
+               ## IF ITEM HAS SINGLE PRICE
+              if item.css('.title-row').css('.price').length != 0
+                 itemPrice = item.css('.title-row').css('.price').text.strip.slice(1..-1).to_f
 
-         ## IF ITEM HAS SINGLE PRICE
-        if item.css('.title-row').css('.price').length != 0
-           itemPrice = item.css('.title-row').css('.price').text.strip.slice(1..-1).to_f
+                 if itemPrice > 0 && itemPrice <= 5
+                   @itemVar = ItemVariation.find_or_create_by(variation:'', menu_item_id: @menuItem.id)
+                   @itemVar.price = itemPrice
+                   @itemVar.save
+                 end
 
-           if itemPrice <= 5
-             @itemVar = ItemVariation.find_or_create_by(variation:'', menu_item_id: @menuItem.id)
-             @itemVar.price = itemPrice
-             @itemVar.save
-           end
+               ## IF ITEM HAS MULTIPLE PRICES
+              elsif item.css('.multiprice').css('li').length != 0
+                 item.css('.multiprice').css('li').each do |variation|
+                   itemVar = variation.css('.title').text.strip
+                   itemVarPrice = variation.css('.price').text.strip.slice(1..-1).to_f
+                   if itemVarPrice > 0 && itemVarPrice <= 5
+                     @itemVar = ItemVariation.find_or_create_by(variation: itemVar, menu_item_id: @menuItem.id)
+                     @itemVar.price = itemVarPrice
+                     @itemVar.save
+                   end
+                 end
+              end
 
-         ## IF ITEM HAS MULTIPLE PRICES
-        elsif item.css('.multiprice').css('li').length != 0
-           item.css('.multiprice').css('li').each do |variation|
-             itemVar = variation.css('.title').text.strip
-             itemVarPrice = variation.css('.price').text.strip.slice(1..-1).to_f
-             if itemVarPrice <= 5
-               @itemVar = ItemVariation.find_or_create_by(variation: itemVar, menu_item_id: @menuItem.id)
-               @itemVar.price = itemVarPrice
-               @itemVar.save
-             end
-           end
+              if @menuItem.item_variations.length == 0
+                @menuItem.destroy
+              end
+            end
+          end
         end
-
-        if @menuItem.item_variations.length == 0
-          @menuItem.destroy
-        end
-       end
-     end
+      end
+    end
   end
 end

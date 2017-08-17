@@ -24,7 +24,6 @@ module Api
 
         else
           render json: @place.errors, message: "Could not update place!", status: 401
-
         end
       end
 
