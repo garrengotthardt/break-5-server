@@ -37,7 +37,7 @@ class ApplicationController < ActionController::API
   end
 
   def secret
-    ENV['secret']
+    ENV['SECRET']
   end
 
   def algorithm
