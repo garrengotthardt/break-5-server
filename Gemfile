@@ -44,5 +44,6 @@ gem 'nokogiri'
 gem 'openssl'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'google_places'
+gem 'figaro'
 
 ruby '2.4.1'

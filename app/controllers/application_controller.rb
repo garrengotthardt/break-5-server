@@ -37,19 +37,19 @@ class ApplicationController < ActionController::API
   end
 
   def secret
-    #change to using ENV Variable with figueroa gem
-    "railsdragons"
+    ENV['secret']
   end
 
   def algorithm
-    "HS256"
+    'HS256'
   end
 
 
   ###MenuItemGrabber
   def getNearbyPlaces(lat, long)
-    @client = GooglePlaces::Client.new('AIzaSyCjEt1fC6-5TCeW7-AXugFRWkjeGImZfyU')
-    resultsArray = @client.spots(lat, long, :types => ['restaurant', 'cafe', 'bar'], :price_level => [0-2])
+    @client = GooglePlaces::Client.new(ENV['GMAPS_API'])
+    resultsArray = @client.spots(lat, long, :types => ['restaurant', 'cafe', 'bar'], :rankBy => ['distance'])
+    # , :price_level => [0-2]
     resultsGoogleIDArray = resultsArray.map { |result| result.place_id  }
     fullPlaceDataArray = resultsGoogleIDArray.map { |place_id| @client.spot(place_id)}
     fullPlaceDataArray.each do |place|
