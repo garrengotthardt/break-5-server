@@ -16,5 +16,11 @@ class Place < ApplicationRecord
   #   end
   # end
 
+  def self.allWithMenuItems
+    Place.all.select do |place|
+      place.menu_items.length > 0
+    end
+  end
+
 
 end

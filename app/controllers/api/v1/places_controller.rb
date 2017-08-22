@@ -3,7 +3,8 @@ module Api
 
     class PlacesController < ApplicationController
       def index
-        render json: Place.all
+        # render json: Place.all
+        render json: Place.allWithMenuItems
       end
 
       def show
