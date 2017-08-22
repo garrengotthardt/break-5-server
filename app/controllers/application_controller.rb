@@ -47,6 +47,7 @@ class ApplicationController < ActionController::API
 
   ###MenuItemGrabber
   def getNearbyPlaces(lat, long)
+    newPlaceWithItemsIDs = []
     @client = GooglePlaces::Client.new(ENV['GMAPS_API'])
     resultsArray = @client.spots(lat, long, :types => ['restaurant', 'cafe', 'bar'], :rankBy => ['distance'])
     # , :price_level => [0-2]
@@ -55,18 +56,21 @@ class ApplicationController < ActionController::API
     fullPlaceDataArray.each do |place|
       ## FIND OR CREATE PLACE
       @place = Place.find_or_create_by(google_places_id: place.place_id)
-      @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, google_url: place.url)
+      if @place.name == nil
+        @place.update(name: place.name, address: place.formatted_address, lat: place.lat, long: place.lng, google_url: place.url)
 
-      if @place.menu_url != nil
-        grabMenuItems(@place.menu_url, @place.id)
-      else
-        grabMenuLink(@place.google_url, @place.id)
-      end
+        if @place.menu_url != nil
+          grabMenuItems(@place.menu_url, @place.id)
+        else
+          grabMenuLink(@place.google_url, @place.id)
+        end
 
-      if @place.menu_items.length == 0
-        @place.destroy
+        if @place.menu_items.length > 0
+          newPlaceWithItemsIDs.push(@place.id)
+        end
       end
     end
+    newPlaceWithItemsIDs
   end
 
   def grabMenuLink(googlePlacesURL, placeID)

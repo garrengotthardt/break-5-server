@@ -33,10 +33,14 @@ module Api
         if @user.update(user_params)
 
           if oldLat != @user.lat || oldLong != @user.long
-            getNearbyPlaces(user_params[:lat], user_params[:long])
-          end
+            newPlacesWithItemIDs = getNearbyPlaces(user_params[:lat], user_params[:long])
 
-          render json: {user: @user, message: "User was updated!", status: 201}
+            render json: {newPlaceIDs: newPlacesWithItemIDs, message: "New Places!", status: 201}
+
+          else
+            render json: {user: @user, message: "User was updated!", status: 201 }
+
+          end
 
         else
           render json: @user.errors, message: "Could not update User!", status: 401
