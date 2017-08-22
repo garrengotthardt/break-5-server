@@ -47,7 +47,7 @@ class ApplicationController < ActionController::API
 
   ###MenuItemGrabber
   def getNearbyPlaces(lat, long)
-    newPlaceWithItemsIDs = []
+    newPlacesCount = 0
     @client = GooglePlaces::Client.new(ENV['GMAPS_API'])
     resultsArray = @client.spots(lat, long, :types => ['restaurant', 'cafe', 'bar'], :rankBy => ['distance'])
     # , :price_level => [0-2]
@@ -66,11 +66,11 @@ class ApplicationController < ActionController::API
         end
 
         if @place.menu_items.length > 0
-          newPlaceWithItemsIDs.push(@place.id)
+          newPlacesCount = newPlacesCount + 1
         end
       end
     end
-    newPlaceWithItemsIDs
+    newPlacesCount
   end
 
   def grabMenuLink(googlePlacesURL, placeID)
