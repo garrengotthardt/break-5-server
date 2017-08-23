@@ -24,7 +24,7 @@ module Api
       private
 
       def menu_item_params
-        params.permit(:name, :description, :place_id)
+        params.permit(:name, :description, :place_id, :category)
       end
     end
 

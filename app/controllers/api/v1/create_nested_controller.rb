@@ -6,14 +6,16 @@ module Api
       def create
         @place = Place.find_or_create_by(google_places_id: params[:google_places_id])
         @place.update_attributes(place_params)
-        
-        @menu_item = MenuItem.new(name: params[:newMenuItem][:name], place_id: @place.id)
+
+        @menu_item = MenuItem.new(name: params[:newMenuItem][:name], category: params[:newMenuItem][:category], place_id: @place.id)
         #add check if valid
         @menu_item.save
 
-        @item_variation = ItemVariation.new(variation: params[:newMenuItemVariations][:variation], price: params[:newMenuItemVariations][:price].to_i, menu_item_id: @menu_item.id  )
+        @item_variation = ItemVariation.new(variation: params[:newMenuItemVariations][:variation], price: params[:newMenuItemVariations][:price].to_f, menu_item_id: @menu_item.id  )
         #add check if valid
         @item_variation.save
+
+        render json: {placeID: @place.id, message: "Item added!", status: 201}
       end
 
       private

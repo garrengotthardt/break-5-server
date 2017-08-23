@@ -1,8 +1,8 @@
 class Place < ApplicationRecord
-  has_many :user_places
+  has_many :user_places, dependent: :destroy
   has_many :users, through: :user_places
-  has_many :menu_items
-  has_many :item_variations, through: :menu_items
+  has_many :menu_items, dependent: :destroy
+  has_many :item_variations, through: :menu_items, dependent: :destroy
 
 
   # def self.get_full_place_data(id)
