@@ -7,7 +7,8 @@ class Api::V1::AuthController < ApplicationController
       email: current_user.email,
       lat: current_user.lat,
       long: current_user.long,
-      address: current_user.address
+      address: current_user.address,
+      saved_places: current_user.places
     }
   end
 
