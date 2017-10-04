@@ -13,9 +13,9 @@ module Api
 
       def create
         if UserPlace.create(user_place_params)
-          render json: {message: "Saved!", place: place, status: 201}
+          render json: {message: "Saved!", status: 201}
         else
-          render json: {message: "Place could not be saved.", place: place, status: 201}
+          render json: {message: "Place could not be saved.", status: 201}
         end
       end
 
