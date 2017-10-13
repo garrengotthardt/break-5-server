@@ -1,24 +1,22 @@
-# README
+### Break5 is a webapp that allows users to find food/drink options near them for under $5
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+#### Visit: https://www.break5app.com
 
-Things you may want to cover:
+- This repo is the Rails API on which the React frontend (https://github.com/garrengotthardt/break-5-client) of the app is built
+- Break5 leverages the Google Places API and a multi-level parser built with Nokogiri to take a user-entered address, gather menu information from nearby establishments, and parse it to provide the user with items under $5
 
-* Ruby version
+#### Screenshots:
 
-* System dependencies
+![map view](https://user-images.githubusercontent.com/1863593/31552304-149f61b0-b005-11e7-884c-32db5d2c9fcf.png)
+Map View
 
-* Configuration
+![list view](https://user-images.githubusercontent.com/1863593/31553070-4273a1d0-b007-11e7-93d9-d188376f23ed.png)
+List View
 
-* Database creation
+![place detail view](https://user-images.githubusercontent.com/1863593/31553180-94f865da-b007-11e7-85a2-90cb8b424ce5.png)
+Establishment Detail View
 
-* Database initialization
+![location search view](https://user-images.githubusercontent.com/1863593/31553136-6d5a8864-b007-11e7-8112-aac1aadb6be9.png)
+Location Search
 
-* How to run the test suite
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
