@@ -3,7 +3,7 @@
 #### Visit: https://www.break5app.com
 
 - This repo is the Rails API on which the React frontend (https://github.com/garrengotthardt/break-5-client) of the app is built
-- Break5 leverages the Google Places API and a multi-level parser built with Nokogiri to take a user-entered address, gather menu information from nearby establishments, and parse it to provide the user with items under $5
+- Break5 leverages the Google Places API and a multi-level parser built with Nokogiri to take a user-entered address, gather menu information from nearby establishments, and parse it to provide the user with items under $5. 
 
 #### Screenshots:
 
